@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Series Prediction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-8t4+sxeP5XbICLqflcAO8Yo4/LiWU1SYRxMwZwr5IaRiF8zAsTUS6ugrsdz7w+So5kq68CW5ZIAlm/ysZqklYQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4 mb-4 text-center">Time Series Prediction</h1>
+        
+        <form id="updateForm" method="post" action="{{ url_for('index') }}" class="mb-4 text-center">
+            <label for="province">Select Province:</label>
+            <select class="form-control" name="province" id="province" onchange="updateData()">
+                {% for column in columns %}
+                    <option value="{{ column }}" {% if column == selected_province %}selected{% endif %}>{{ column }}</option>
+                {% endfor %}
+            </select>
+        </form>
+        
+        <div class="mb-4 text-center">
+            <h2>Historical Prices</h2>
+            <img src="{{ historical_plot }}" alt="Historical Prices" class="img-fluid mx-auto d-block">
+        </div>
+        
+        <div class="mb-4 text-center">
+            <h2>Actual vs Predicted Prices</h2>
+            <img src="{{ predicted_plot }}" alt="Actual vs Predicted Prices" class="img-fluid mx-auto d-block">
+        </div>
+    <br>
+    <div class="mb-4 text-center">
+        <h2>Comparison Table</h2>
+        {% if comparison_df %}
+            <div class="text-center">
+                <table class="table table-bordered mx-auto" style="max-width: 800px;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <!-- Add other province headers dynamically -->
+                            {% for province in comparison_df[0].keys() if province != 'Date' %}
+                                <th>{{ province }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in comparison_df %}
+                            <tr>
+                                <td>{{ row['Date'] }}</td>
+                                <!-- Add other cells dynamically -->
+                                {% for province, value in row.items() if province != 'Date' %}
+                                    <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No data available for comparison.</p>
+        {% endif %}
+    </div>
+    
+    <div class="text-center mt-4 bg-light p-3">
+        <h2>Accuracy Metrics</h2>
+        
+        <table class="table table-bordered mx-auto" style="max-width: 600px;">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if rmse %}
+                    <tr>
+                        <td>Root Mean Squared Error (RMSE)</td>
+                        <td>{{ rmse|round(2) }}</td>
+                    </tr>
+                {% endif %}
+                
+                {% if mae %}
+                    <tr>
+                        <td>Mean Absolute Error (MAE)</td>
+                        <td>{{ mae|round(2) }}</td>
+                    </tr>
+                {% endif %}
+    
+                {% if mape %}
+                    <tr>
+                        <td>Mean Absolute Percentage Error (MAPE)</td>
+                        <td>{{ mape|round(2) }}%</td>
+                    </tr>
+                {% endif %}
+    
+                {% if r_squared %}
+                    <tr>
+                        <td>R-squared</td>
+                        <td>{{ r_squared|round(2) }}</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div class="text-center mt-5">
+        <a href="{{ url_for('predictions') }}" class="btn btn-primary btn-lg">
+            Future Predictions <span style="margin-left: 5px;">&rarr;</span>
+        </a>
+    </div>
+<br>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        function updateData() {
+            document.getElementById('updateForm').submit();
+        }
+    </script>
+</body>
+</html>
