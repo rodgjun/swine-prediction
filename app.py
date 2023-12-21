@@ -202,15 +202,15 @@ def index():
     #Time Series Generator Modifications
     n_input = 18
     n_features = 1
-    generator_train = TimeseriesGenerator(scaled_train, scaled_train, length=n_input, batch_size=8)
-    generator_val = TimeseriesGenerator(val_data, val_data, length=n_input, batch_size=8)
+    generator_train = TimeseriesGenerator(scaled_train, scaled_train, length=n_input, batch_size=1)
+    generator_val = TimeseriesGenerator(val_data, val_data, length=n_input, batch_size=1)
 
     # Model Architechture
     model = Sequential()
-    model.add(LSTM(200, activation='relu', input_shape=(n_input, n_features), return_sequences=True))
-    model.add(Dropout(0.5))
-    model.add(LSTM(100, activation='relu'))
-    model.add(Dropout(0.5))
+    model.add(LSTM(50, activation='relu', input_shape=(n_input, n_features), return_sequences=True))
+    model.add(Dropout(0.3))
+    model.add(LSTM(50, activation='relu'))
+    model.add(Dropout(0.3))
     model.add(Dense(1, kernel_regularizer='l2'))
 
     optimizer = Adam(learning_rate=0.001, decay=1e-5)
