@@ -207,10 +207,10 @@ def index():
 
     # Model Architechture
     model = Sequential()
-    model.add(LSTM(50, activation='relu', input_shape=(n_input, n_features), return_sequences=True))
-    model.add(Dropout(0.3))
-    model.add(LSTM(50, activation='relu'))
-    model.add(Dropout(0.3))
+    model.add(LSTM(128, activation='relu', input_shape=(n_input, n_features), return_sequences=True))
+    model.add(Dropout(0.5))
+    model.add(LSTM(128, activation='relu'))
+    model.add(Dropout(0.5))
     model.add(Dense(1, kernel_regularizer='l2'))
 
     optimizer = Adam(learning_rate=0.001, decay=1e-5)
