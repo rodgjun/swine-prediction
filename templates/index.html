@@ -16,7 +16,9 @@
             <label for="province">Select Province:</label>
             <select class="form-control" name="province" id="province" onchange="updateData()">
                 {% for column in columns %}
-                    <option value="{{ column }}" {% if column == selected_province %}selected{% endif %}>{{ column }}</option>
+                    {% if column not in ['DavaoOccidental', 'Batanes', 'Sulu', 'CityofDavao', 'ZamboangaCity', 'Maguindanao', 'Basilan'] %}
+                        <option value="{{ column }}" {% if column == selected_province %}selected{% endif %}>{{ column }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
         </form>

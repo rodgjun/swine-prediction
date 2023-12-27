@@ -175,6 +175,11 @@ def index():
     # Convert non-numeric values to NaN
     df = df.apply(pd.to_numeric, errors='coerce')
 
+    # Drop columns with more than 10% null values
+    # df.drop(['National Capital Region (NCR)','Lanao del Sur', 'Tawi-tawi'], axis=1, inplace=True)
+    # df.drop(['DavaoOccidental','Batanes', 'Sulu','CityofDavao', 'ZamboangaCity','Maguindanao', 'Basilan'], axis=1, inplace=True)
+    # From 97 provinces to 90. 7 provinces had more than 10% null values and were dropped
+
     # Fill NaN values with the mean
     df.fillna(df.mean(), inplace=True)
 
@@ -281,7 +286,7 @@ def index():
         'index.html',
         historical_plot=historical_plot_path,
         predicted_plot=predicted_plot_path,
-         comparison_df=comparison_data,
+        comparison_df=comparison_data,
         columns=columns,
         selected_province=selected_province,
         rmse=rmse,  # Pass RMSE to the template
